@@ -1,0 +1,7 @@
+# machine specific profile
+[ -f $HOME/.profile ] && source $HOME/.profile
+
+export BASH_PROFILE="$HOME/.bash_profile"
+if [[ -f $HOME/.bashrc && "${BASHRC-undefined}" == "undefined" ]]; then
+  source $HOME/.bashrc
+fi

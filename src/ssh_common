@@ -1,0 +1,31 @@
+__fp_fmt__="SHA256"
+
+function _info() {
+  loglevel="info"
+  [ ! -z "$2"] && loglevel=$2
+  echo "[${__ssh_agent_init__}:$loglevel] $1" >&2
+}
+
+# _info ".ssh_common is loaded" "DEBUG"
+
+function echo_keyhash() {
+  $1=ssh_key
+  keyhash = $(ssh-keygen -E ${__fp_fmt__} -l -f $1)
+}
+
+function add_sshkeys() {
+  keys=$(grep -s "OPENSSH PRIVATE KEY" $HOME/.ssh/* | sed -e 's/^\(.*\):.*$/\1/g' | uniq)  
+  for key in ${keys[@]}; do
+    key_fp=$(ssh-keygen -l -E $__fp_fmt__ -f ${key} | awk -F' ' '{print $2}')
+    if [ $(ssh-add -E ${__fp_fmt__} -l | grep  $key_fp | wc -l) \
+          -eq 0 \
+       ]; then
+      _info "add key: ${key}"
+      ssh-add $key
+    fi
+  done
+}
+
+function clear_authsock_deadlinks() {
+  find $HOME/.ssh/ -xtype l | xargs -r rm
+}

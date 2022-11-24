@@ -1,0 +1,2 @@
+if [[ $- != *i* ]]; then return; fi
+[ -f /opt/homebre/bin/brew ] && eval $(/opt/homebrew/bin/brew shellenv)

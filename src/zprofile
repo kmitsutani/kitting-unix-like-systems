@@ -1,0 +1,12 @@
+if [[ $- != *i* ]]; then return; fi
+eval $(/opt/homebrew/bin/brew shellenv)
+
+source $HOME/.export_path
+source $HOME/.export_envs
+source $HOME/.ssh_profile
+
+[ -f $HOME/.profile ] && source $HOME/.profile
+export ZPROFILE="$HOME/.zprofile"
+if [ -f $HOME/.zshrc ] && [ "${ZSHRC-undefined}" == "undefined" ];then
+  source $HOME/.zshrc
+fi

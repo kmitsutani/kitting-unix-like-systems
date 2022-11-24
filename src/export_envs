@@ -1,0 +1,7 @@
+#:=export_envs
+export XDG_CONFIG_HOME=$HOME/.config
+export LANG=en_US.UTF-8
+export EDITOR=vim
+
+# pkgconfig
+export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig

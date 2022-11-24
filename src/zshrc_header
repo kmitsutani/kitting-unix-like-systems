@@ -1,0 +1,123 @@
+#:=zshrc_header
+if [[ $- != *i* ]]; then return; fi
+if [[ -f $HOME/.zprofile && "${ZPROFILE-undefined}" == "undefined" ]]; then
+  source $HOME/.zprofile
+fi
+setopt IGNOREEOF
+setopt auto_cd
+setopt autopushd
+setopt pushd_ignore_dups
+setopt share_history
+HISTFILE=~/.zsh_history
+HISTSIZE=1000000
+SAVEHIST=1000000
+
+#-- Alias --#
+[[ -f $HOME/.aliases ]] && source $HOME/.aliases
+
+#-- Completion --#
+# shellcheck disable=SC2206
+#
+if type brew &>/dev/null; then
+    FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+else
+  [ -e $HOME/.zsh/plugins/zsh-completions ] && fpath=($HOME/plugins/zsh-completions $fpath)
+fi
+autoload -Uz compinit
+compinit -u
+
+#-- Archive settings --#
+export ZIPINFOOPT=-OCP932
+export UNZIPOPT=-OCP932
+
+#-- Like fish prompt --#
+if [[ -d /opt/homebrew/share ]];then
+  _plugins=/opt/homebrew/share
+else
+	_plugins=$HOME/.zsh/plugins
+fi
+source $_plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $_plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $_plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
+unset _plugins
+
+#-- Key --#
+# create a zkbd compatible hash;
+# to add other keys to this hash, see: man 5 terminfo
+typeset -A key
+
+key[Home]=${terminfo[khome]}
+
+key[End]=${terminfo[kend]}
+key[Insert]=${terminfo[kich1]}
+key[Delete]=${terminfo[kdch1]}
+key[Up]=${terminfo[kcuu1]}
+key[Down]=${terminfo[kcud1]}
+key[Left]=${terminfo[kcub1]}
+key[Right]=${terminfo[kcuf1]}
+key[PageUp]=${terminfo[kpp]}
+key[PageDown]=${terminfo[knp]}
+
+# setup key accordingly
+[[ -n "${key[Home]}"     ]]  && bindkey  "${key[Home]}"     beginning-of-line
+[[ -n "${key[End]}"      ]]  && bindkey  "${key[End]}"      end-of-line
+[[ -n "${key[Insert]}"   ]]  && bindkey  "${key[Insert]}"   overwrite-mode
+[[ -n "${key[Delete]}"   ]]  && bindkey  "${key[Delete]}"   delete-char
+[[ -n "${key[Up]}"       ]]  && bindkey  "${key[Up]}"       history-substring-search-up
+[[ -n "${key[Down]}"     ]]  && bindkey  "${key[Down]}"     history-substring-search-down
+[[ -n "${key[Left]}"     ]]  && bindkey  "${key[Left]}"     backward-char
+[[ -n "${key[Right]}"    ]]  && bindkey  "${key[Right]}"    forward-char
+[[ -n "${key[PageUp]}"   ]]  && bindkey  "${key[PageUp]}"   beginning-of-buffer-or-history
+[[ -n "${key[PageDown]}" ]]  && bindkey  "${key[PageDown]}" end-of-buffer-or-history
+
+# Normal history display
+#[[ -n "${key[Up]}"       ]]  && bindkey  "${key[Up]}"       up-line-or-history
+#[[ -n "${key[Down]}"     ]]  && bindkey  "${key[Down]}"     down-line-or-history
+
+# Finally, make sure the terminal is in application mode, when zle is
+# active. Only then are the values from $terminfo valid.
+if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
+    function zle-line-init () {
+        printf '%s' "${terminfo[smkx]}"
+    }
+    function zle-line-finish () {
+        printf '%s' "${terminfo[rmkx]}"
+    }
+    zle -N zle-line-init
+    zle -N zle-line-finish
+fi
+
+#-- Do not sound --#
+setopt nolistbeep
+setopt nolistbeep
+
+# colors
+autoload -Uz colors && colors
+[ -f $HOME/.dircolors ] && eval $(dircolors $HOME/.dircolors -b)
+
+# completion
+autoload -Uz compinit && compinit >/dev/null
+
+bindkey -e
+stty erase ^H
+stty erase '^?'
+
+if [ -f $HOME/.iterm2_shell_integration.zsh ]; then
+  source $HOME/.iterm2_shell_integration.zsh
+fi
+
+alias ls='ls -G'
+alias ssh="ssh -A"
+alias pip="python3 -m pip"
+alias jnb="jupyter-notebook"
+
+PROMPT='%F{blue}%n@%l/%M%f:%~
+[%D %*]%# '
+#source $HOME/.zshrc_powerline_shell
+
+if [[ $(which gh | grep '/.*gh' | wc -l) -gt 0 ]];then
+  eval "$(gh completion -s zsh)"
+fi
+if [[ $(which starship | grep '/.*starship' | wc -l) -gt 0 ]];then
+  eval "$(starship init zsh)"
+fi

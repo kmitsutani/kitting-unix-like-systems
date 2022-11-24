@@ -1,0 +1,2 @@
+export ZSHRC="$HOME/.zshrc"
+echo "[INFO] set ZSHRC=$HOME/.zshrc"

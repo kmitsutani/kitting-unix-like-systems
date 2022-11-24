@@ -1,0 +1,129 @@
+# on_ft
+## preview
+[[plugins]]
+repo = 'kannokanno/previm'
+on_ft = ['mkd', 'md', 'markdown', 'html', 'tex']
+'depends = ['/open-browser.vim', '/webapi-vim']
+hook_add = '''
+  if !g:not_isbow
+    let g:previm_open_cmd=expand('~/bin/chrome_wrapper')
+  endif
+  let g:previm_enable_realtime=1
+'''
+
+[[plugins]]
+repo = 'prabirshrestha/vim-lsp'
+depens = ['/async.vim']
+on_ft = 'python'
+hood_add = '''
+" デバッグ用設定
+let g:lsp_log_verbose = 1  " デバッグ用ログを出力
+let g:lsp_log_file = expand('~/.cache/tmp/vim-lsp.log')  " ログ出力のPATHを設定
+
+" 言語用Serverの設定
+augroup MyLsp
+  autocmd!
+  " pip install python-language-server
+  if executable('pyls')
+    " Python用の設定を記載
+    " workspace_configで以下の設定を記載
+    " - pycodestyleの設定はALEと重複するので無効にする
+    " - jediの定義ジャンプで一部無効になっている設定を有効化
+    autocmd User lsp_setup call lsp#register_server({
+        \ 'name': 'pyls',
+        \ 'cmd': { server_info -> ['pyls'] },
+        \ 'whitelist': ['python'],
+        \ 'workspace_config': {'pyls': {'plugins': {
+        \   'pycodestyle': {'enabled': v:false},
+        \   'jedi_definition': {'follow_imports': v:true, 'follow_builtin_imports': v:true},}}}
+        \})
+    autocmd FileType python call s:configure_lsp()
+  endif
+augroup END
+" 言語ごとにServerが実行されたらする設定を関数化
+function! s:configure_lsp() abort
+  setlocal omnifunc=lsp#complete   " オムニ補完を有効化
+  " LSP用にマッピング
+  nnoremap <buffer> <C-]> :<C-u>LspDefinition<CR>
+  nnoremap <buffer> gd :<C-u>LspDefinition<CR>
+  nnoremap <buffer> gD :<C-u>LspReferences<CR>
+  nnoremap <buffer> gs :<C-u>LspDocumentSymbol<CR>
+  nnoremap <buffer> gS :<C-u>LspWorkspaceSymbol<CR>
+  nnoremap <buffer> gQ :<C-u>LspDocumentFormat<CR>
+  vnoremap <buffer> gQ :LspDocumentRangeFormat<CR>
+  nnoremap <buffer> K :<C-u>LspHover<CR>
+  nnoremap <buffer> <F1> :<C-u>LspImplementation<CR>
+  nnoremap <buffer> <F2> :<C-u>LspRename<CR>
+endfunction
+let g:lsp_diagnostics_enabled = 0  " 警告やエラーの表示はALEに任せるのでOFFにする
+'''
+
+[[plugins]]
+repo = 'prabirshrestha/async.vim'
+
+[[plugins]]
+repo = 'vim-latex/vim-latex'
+on_ft = ['tex', 'plaintex', 'latex']
+hook_add = '''
+  filetype plugin on
+  filetype indent on
+  set shellslash
+  set grepprg=grep\ -nH\ $*
+  let g:tex_flavor='latex'
+  let g:Imap_UsePlaceHolders = 1
+  let g:Imap_DeleteEmptyPlaceHolders = 1
+  let g:Imap_StickyPlaceHolders = 0
+  let g:Tex_DefaultTargetFormat = 'pdf'
+  let g:Tex_MultipleCompileFormats='dvi,pdf'
+  "let g:Tex_FormatDependency_pdf = 'pdf'
+  let g:Tex_FormatDependency_pdf = 'dvi,pdf'
+  let g:Tex_CompileRule_pdf = 'ptex2pdf -u -l -ot "-synctex=1 -interaction=nonstopmode -file-line-error-style" $*'
+  "let g:Tex_CompileRule_pdf = 'lualatex -synctex=1 -interaction=nonstopmode -file-line-error-style $*'
+  let g:Tex_CompileRule_dvi = 'uplatex -synctex=1 -interaction=nonstopmode -file-line-error-style $*'
+  let g:Tex_BibtexFlavor = 'upbibtex'
+  let g:Tex_MakeIndexFlavor = 'upmendex $*.idx'
+  let g:Tex_UseEditorSettingInDVIViewer = 1
+  let g:Tex_ViewRule_pdf = 'Skim'
+  "let g:Tex_ViewRule_pdf = 'open -a Skim'
+  "let g:Tex_ViewRule_pdf = 'open -a Preview'
+  "let g:Tex_ViewRule_pdf = 'open -a TeXShop'
+  "let g:Tex_ViewRule_pdf = '/Applications/TeXworks.app/Contents/MacOS/TeXworks'
+  "let g:Tex_ViewRule_pdf = '/Applications/texstudio.app/Contents/MacOS/texstudio --pdf-viewer-only'
+  "let g:Tex_ViewRule_pdf = 'open -a Firefox'
+  "let g:Tex_ViewRule_pdf = 'open -a "Adobe Acrobat Reader DC"'
+  "let g:Tex_ViewRule_pdf = 'open'
+'''
+
+
+[[plugins]]
+repo = 'tyru/open-browser.vim'
+on_source = ['previm']
+
+[[plugins]]
+repo = 'mattn/webapi-vim'
+on_source = ['previm', 'esa.vim']
+
+## CPP
+[[plugins]]
+repo = 'vim-jp/cpp-vim'
+on_ft = 'cpp'
+
+## Python
+[[plugins]]
+repo = 'davidhalter/jedi-vim'
+on_ft = 'python'
+hook_add = '''
+  let g:jedi#completions_command = '<C-c>'
+  let g:jedi#popup_on_dot = 0
+  let g:jedi#popup_select_first = 0
+'''
+
+## Javascript
+[[plugins]]
+repo = 'AtsushiSakai/bookmarklet.vim'
+on_ft = 'javascript'
+
+# TOML
+[[plugins]]
+repo = 'cespare/vim-toml'
+on_ft = 'toml'

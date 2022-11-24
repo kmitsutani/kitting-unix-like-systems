@@ -1,0 +1,6 @@
+if [[ $- != *i* ]]; then return; fi
+# check dotfiles repository
+src_dir=$(dirname $(readlink -f $HOME/.bash_profile))
+if [ ! -z "$(cd ${src_dir}; git status -s)" ]; then
+  echo "you have something to do with dotfiles git repository"
+fi

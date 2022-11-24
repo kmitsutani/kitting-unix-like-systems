@@ -1,0 +1,29 @@
+#:=export_path
+_paths=($(echo $PATH | sed -e 's/:/ /g'))
+PATH=""
+
+_paths+=($HOME/bin)
+_paths+=($HOME/.local/bin)
+_paths+=(/usr/local/bin)
+_paths+=(/usr/local/sbin)
+_paths+=(/usr/local/SPTK/bin)
+_paths+=($HOME/.miniconda3)
+_paths+=($HOME/miniconda3)
+_paths+=($HOME/snap/bin)
+_paths+=(/usr/local/opt/lsof/bin)
+_paths+=($HOME/tf_objdet/models/protobuf)
+
+PATH=${_paths[1]}
+for _path in ${_paths[@]:1}; do
+  [ -d $_path ] && PATH="$PATH:$_path"
+done
+
+# The next line updates PATH for the Google Cloud SDK.
+[ -f "${HOME}/google-cloud-sdk/_path.bash.inc" ] && \
+  source '/Users/mitsutani/google-cloud-sdk/_path.bash.inc'
+
+# The next line enables shell command completion for gcloud.
+[ -f "${HOME}/google-cloud-sdk/completion.bash.inc" ] && \
+  source '/Users/mitsutani/google-cloud-sdk/completion.bash.inc'
+
+export PATH

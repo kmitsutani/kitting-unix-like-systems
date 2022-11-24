@@ -1,0 +1,42 @@
+if [[ $- != *i* ]]; then return; fi
+if [ -f $HOME/.zprofile ] && [ "${ZPROFILE-undefined}" ]; then
+  source $HOME/.zprofile
+fi
+setopt IGNOREEOF
+setopt auto_cd
+setopt autopushd
+setopt pushd_ignore_dups
+setopt share_history
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+
+# colors
+autoload -Uz colors
+colors
+[ -f $HOME/.dircolors ] && eval $(dircolors $HOME/.dircolors -b)
+
+# completion
+autoload -Uz compinit
+compinit
+
+bindkey -e
+stty erase ^H
+stty erase '^?'
+
+source ~/.iterm2_shell_integration.zsh
+
+alias ls='ls -G'
+alias ssh="ssh -A"
+alias pip="python3 -m pip"
+alias jnb="jupyter-notebook"
+
+PROMPT='%F{blue}%n@%l/%M%f:%~
+[%D %*]%# '
+#source $HOME/.zshrc_powerline_shell
+
+[ $(which gh | wc -l) -ne 0 ] && eval "$(gh completion -s zsh)"
+[ $(which starship | wc -l) -ne 0 ] && "$(starship init zsh)"
+
+export ZSHRC="$HOME/.zshrc"
+export ZSHRC="$HOME/.zshrc"

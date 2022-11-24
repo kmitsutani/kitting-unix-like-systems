@@ -1,0 +1,2 @@
+# ~/.bashrc
+export BASHRC=$HOME/.bashrc

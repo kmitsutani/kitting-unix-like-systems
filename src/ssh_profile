@@ -1,0 +1,36 @@
+__ssh_agent_init__="ssh_profile"
+
+function start_ssh_agent() {
+  _info "starting ssh-agent"
+  eval $(ssh-agent)
+}
+
+function link_socket() {
+  _info "making symlink of authorization socket..."
+  linkname=$1
+  newauthsock=$HOME/.ssh/authsock_$1
+  _info "link target $newauthsock"
+  [[ "$SSH_AUTH_SOCK" == $newauthsock ]] && return
+  ln -snf $SSH_AUTH_SOCK $newauthsock
+  _info "made symlink: $SSH_AUTH_SOCK -> $newauthsock"
+  export SSH_AUTH_SOCK=$newauthsock
+  _info "export SSH_AUTH_SOCK=$newauthsock"
+}
+
+if [ -v SSH_AUTH_SOCK ] && [ -v SSH_CONNECTION ]; then
+  ssh_path=$(echo $SSH_CONNECTION |\
+             awk -F' ' '{for(i=1;i<=NF;i+=2)printf("%s-", $i)}')
+  link_socket $(sed -e 's/ /-/g' <<< ${ssh_path/%?/})
+fi
+
+if [ ! -v SSH_AUTH_SOCK ]; then
+  _info "SSH_AUTH_SOCK is not defined."
+  start_ssh_agent
+  link_socket "local"
+fi
+
+
+clear_authsock_deadlinks
+add_sshkeys
+
+unset __ssh_agent_init__

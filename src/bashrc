@@ -1,0 +1,33 @@
+if [[ $- != *i* ]]; then return; fi
+export XDG_CONFIG_HOME=$HOME/.config
+[[ "${BASH_PROFILE-undefined}" == "undefined" ]] && source $HOME/.bash_profile
+
+# aliases
+if [ $(ls --help 2>&1 | grep GNU | wc -l) -gt 0 ]; then
+    alias ls='ls --color=auto'
+else
+    alias ls='ls -G'
+fi
+alias cronedit='crontab -e'
+alias cronlist='crontab -l'
+alias vi="vim -u /etc/vimrc --noplugin"
+
+# record time stamp to history
+HISTTIMEFORMAT='%Y-%m-%d %T '
+
+# machine dependent bashrc
+[ -f $HOME/.bashrc_local ] && . $HOME/.bashrc_local
+
+# dircolors
+[ -f $HOME/.dircolors ] && eval $(dircolors $HOME/.dircolors -b)
+
+HISTTIMEFORMAT='%Y-%m-%d %T '
+export PS1="${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w \[\033[00m\]\n[\d \t]\$ "
+
+## SSH-AGENT
+source $HOME/.sshrc
+
+[ -f $HOME/.bashrc_local ] && source $HOME/.bashrc_local
+
+# ~/.bashrc
+export BASHRC=$HOME/.bashrc
