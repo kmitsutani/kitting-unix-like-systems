@@ -44,7 +44,7 @@ ifeq ($(SHELLBIN), zsh)
 	done
 endif
 
-build/profile: build
+build/profile: dirs
 ifeq ($(SHELLBIN), bash)
 	cat src/bash_profile_header >> $@
 	cat src/export_envs >> $@
@@ -68,7 +68,7 @@ endif
 endif
 
 
-build/rc: build
+build/rc: dirs
 ifeq ($(SHELLBIN), bash)
 	cat src/bashrc_header >> $@
 	cat src/ssh_common >> $@
@@ -81,20 +81,20 @@ else ifeq ($(SHELLBIN), zsh)
 	cat src/zshrc_footer >> $@
 endif
 
-tmux: requirements build
+tmux: requirements dirs
 	cp -r $(MAKEDIR)/src/tmux.conf $(MAKEDIR)/build/tmux.conf
 	cp -r $(MAKEDIR)/src/tmux $(MAKEDIR)/build/tmux
 	ln -snf $(MAKEDIR)/build/tmux.conf ~/.tmux.conf
 	ln -snf $(MAKEDIR)/build/tmux ~/.tmux
 
-vim: requirements build
+vim: requirements dirs
 	cp -r $(MAKEDIR)/src/vim $(MAKEDIR)/build/vim
 	cp $(MAKEDIR)/src/vimrc $(MAKEDIR)/build/vimrc
 	cp $(MAKEDIR)/src/vimrc_dein $(MAKEDIR)/build/vimrc_dein
 
 libevent_version := 2.1.12
 tmux_version := 3.3a
-requirements:
+requirements: dirs
 ifeq ($(shell which tmux 2>/dev/null | grep /.*tmux | wc -l), 0)
 	mkdir -p $${HOME}/local/lib/pkgconfig
 
@@ -119,13 +119,14 @@ ifeq ($(shell which tmux 2>/dev/null | grep /.*tmux | wc -l), 0)
 	make && make install
 endif
 
-starship:
+starship: dirs
 	cd /tmp
 	wget https://starship.rs/install.sh
 	chmod +x install.sh
-	mkdir -p $${HOME}/.local/bin
 	./install.sh -b $${HOME}/.local/bin
 	cp $(MAKEDIR)/src/starship.toml $(MAKEDIR)/build/starship.toml
 
-build:
+dirs:
 	mkdir build
+	mkdir -p $${HOME}/.local/bin
+	mkdir -p $${HOME}/.config
