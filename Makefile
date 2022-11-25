@@ -13,16 +13,6 @@ else ifeq ($(SHELLBIN), zsh)
 	profile := .zprofile
 endif
 
-ifeq ($(shell uname), Linux)
-ifneq ($(shell which apt-get 2>/dev/null | wc -l), 0)
-	install_pkg := sudo apt-get install
-else ifneq ($(shell which pacman 2>/dev/null | wc -l), 0)
-	install_pkg := sudo pacman -S
-endif
-else ifeq ($(shell uname), Darwin)
-	install_pkg := /opt/homebrew/bin/brew install
-endif
-
 all: tmux vim build/profile build/rc shell_plugins
 
 clean: distclean buildclean
@@ -101,9 +91,31 @@ vim: requirements build
 	cp $(MAKEDIR)/src/vimrc $(MAKEDIR)/build/vimrc
 	cp $(MAKEDIR)/src/vimrc_dein $(MAKEDIR)/build/vimrc_dein
 
+libevent_version := 2.1.12
+tmux_version := 3.3a
 requirements:
 ifeq ($(shell which tmux 2>/dev/null | grep /.*tmux | wc -l), 0)
-	$(install_pkg) tmux
+	mkdir -p $${HOME}/local/lib/pkgconfig
+
+	git clone --depth=1 https://github.com/ThomasDickey/ncurses-snapshots.git $(MAKEDIR)/build/nurses
+	cd $(MAKEDIR)/build/nurses
+	./configure --prefix=~/local --with-shared --with-termlib --enable-pc-files \
+		          --with-pkg-config-libdir=$${HOME}/local/lib/pkgconfig
+	make && make install
+
+	cd $(MAKEDIR)/build
+	wget https://github.com/libevent/libevent/releases/download/release-$(libevent_version)-stable/libevent-$(libevent_version)-stable.tar.gz
+	tar xzf libevent-$(libevent_version)-stable.tar.gz
+	cd libevent-$(libevent_version)/
+	./configure --prefix=$${HOME}/local --enable-shared
+	make && make install
+
+	cd $(MAKEDIR)/build
+	wget https://github.com/tmux/tmux/releases/download/3.3a/tmux-$(tmux_version).tar.gz
+	tar xzf tmux-$(tmux_version).tar.gz
+	cd tmux-$(tmux_version)
+	PKG_CONFIG_PATH=$${HOME}/local/lib/pkgconfig ./configure --prefix=$${HOME}/local
+	make && make install
 endif
 
 build:
