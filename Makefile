@@ -124,7 +124,7 @@ starship:
 	wget https://starship.rs/install.sh
 	chmod +x install.sh
 	mkdir -p $${HOME}/.local/bin
-	./install.sh -b $${HOME}/.bin
+	./install.sh -b $${HOME}/.local/bin
 	cp $(MAKEDIR)/src/starship.toml $(MAKEDIR)/build/starship.toml
 
 build:
