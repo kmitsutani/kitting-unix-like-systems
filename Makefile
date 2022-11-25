@@ -127,6 +127,6 @@ starship: dirs
 	cp $(MAKEDIR)/src/starship.toml $(MAKEDIR)/build/starship.toml
 
 dirs:
-	mkdir build
+	mkdir -p build
 	mkdir -p $${HOME}/.local/bin
 	mkdir -p $${HOME}/.config
