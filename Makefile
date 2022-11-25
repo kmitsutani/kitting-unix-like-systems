@@ -120,7 +120,11 @@ ifeq ($(shell which tmux 2>/dev/null | grep /.*tmux | wc -l), 0)
 endif
 
 starship:
-	curl -sS https://starship.rs/install.sh | sh
+	cd /tmp
+	wget https://starship.rs/install.sh
+	chmod +x install.sh
+	mkdir -p $${HOME}/.local/bin
+	./install.sh -b $${HOME}/.bin
 	cp $(MAKEDIR)/src/starship.toml $(MAKEDIR)/build/starship.toml
 
 build:
