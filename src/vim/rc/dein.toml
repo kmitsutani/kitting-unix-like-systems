@@ -62,10 +62,6 @@ repo = 'thinca/vim-quickrun'
 # Web Service
 #---------------------------
 
-# w3m
-[[plugins]]
-repo = 'yuratomo/w3m.vim'
-
 # Slack
 [[plugins]]
 repo = 'yaasita/edit-slack.vim'
