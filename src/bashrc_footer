@@ -1,2 +1,2 @@
-# ~/.bashrc
+eval "$(starship init bash)"
 export BASHRC=$HOME/.bashrc

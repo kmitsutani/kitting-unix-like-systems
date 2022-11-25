@@ -1,6 +1,6 @@
 zsh_plugins := zsh-completions zsh-autosuggestions zsh-syntax-highlighting zsh-history-substring-search
 
-.PHONY: requirements tmux vim all install buildclean distclean allclean
+.PHONY: requirements tmux vim all install buildclean distclean allclean starship
 .DEFAULT_GOAL := all
 
 MAKEDIR:=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
@@ -13,18 +13,19 @@ else ifeq ($(SHELLBIN), zsh)
 	profile := .zprofile
 endif
 
-all: tmux vim build/profile build/rc shell_plugins
+all: tmux vim build/profile build/rc shell_plugins starship
 
 clean: distclean buildclean
 
 install: all
-	ln -snf $(MAKEDIR)/build/vimrc ~/.vimrc
-	ln -snf $(MAKEDIR)/build/vimrc_dein ~/.vimrc_dein
-	ln -snf $(MAKEDIR)/build/vim ~/.vim
-	ln -snf $(MAKEDIR)/build/tmux.conf ~/.tmux.conf
-	ln -snf $(MAKEDIR)/build/tmux ~/.tmux
-	ln -snf $(MAKEDIR)/build/rc ~/$(rc)
-	ln -snf $(MAKEDIR)/build/profile ~/$(profile)
+	ln -snf $(MAKEDIR)/build/vimrc $${HOME}/.vimrc
+	ln -snf $(MAKEDIR)/build/vimrc_dein $${HOME}/.vimrc_dein
+	ln -snf $(MAKEDIR)/build/vim $${HOME}/.vim
+	ln -snf $(MAKEDIR)/build/tmux.conf $${HOME}/.tmux.conf
+	ln -snf $(MAKEDIR)/build/tmux $${HOME}/.tmux
+	ln -snf $(MAKEDIR)/build/rc $${HOME}/$(rc)
+	ln -snf $(MAKEDIR)/build/profile $${HOME}/$(profile)
+	ln -snf $(MAKEDIR)/build/starship.toml $${HOME}/.config/starship.toml
 
 distclean:
 	rm ~/.vimrc ~/.vimrc_dein ~/.tmux.conf ~/.tmux ~/$(rc) ~/$(profile)
@@ -117,6 +118,10 @@ ifeq ($(shell which tmux 2>/dev/null | grep /.*tmux | wc -l), 0)
 	PKG_CONFIG_PATH=$${HOME}/local/lib/pkgconfig ./configure --prefix=$${HOME}/local
 	make && make install
 endif
+
+starship:
+	curl -sS https://starship.rs/install.sh | sh
+	cp $(MAKEDIR)/src/starship.toml $(MAKEDIR)/build/starship.toml
 
 build:
 	mkdir build
