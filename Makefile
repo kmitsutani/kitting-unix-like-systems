@@ -120,10 +120,10 @@ ifeq ($(shell which tmux 2>/dev/null | grep /.*tmux | wc -l), 0)
 endif
 
 starship: dirs
-	cd $(MAKEDIR)/build
-	curl https://starship.rs/install.sh -o starship-install.sh
-	chmod +x starship-install.sh
-	./starship-install.sh -b $${HOME}/.local/bin
+	cd $(MAKEDIR)/build &&\
+	curl https://starship.rs/install.sh -o starship-install.sh &&\
+	chmod +x starship-install.sh &&\
+	./starship-install.sh -b $${HOME}/.local/bin -y
 	cp $(MAKEDIR)/src/starship.toml $(MAKEDIR)/build/starship.toml
 
 dirs:
