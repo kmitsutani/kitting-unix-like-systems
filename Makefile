@@ -105,9 +105,6 @@ requirements:
 ifeq ($(shell which tmux 2>/dev/null | grep /.*tmux | wc -l), 0)
 	$(install_pkg) tmux
 endif
-ifeq ($(shell which bc 2>/dev/null | grep /.*bc | wc -l), 0)
-	$(install_pkg) bc
-endif
 ifeq ($(shell which w3m 2>/dev/null | grep /.*w3m | wc -l), 0)
 	$(install_pkg) w3m
 endif
