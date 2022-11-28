@@ -2,6 +2,7 @@ zsh_plugins := zsh-completions zsh-autosuggestions zsh-syntax-highlighting zsh-h
 
 .PHONY: requirements tmux vim all install buildclean distclean allclean starship
 .DEFAULT_GOAL := all
+SHELL=/bin/bash
 
 MAKEDIR:=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 SHELLBIN:=$(notdir $(shell echo $$SHELL))
@@ -13,7 +14,7 @@ else ifeq ($(SHELLBIN), zsh)
 	profile := .zprofile
 endif
 
-all: tmux vim build/profile build/rc shell_plugins starship
+all: tmux vim build/profile build/rc zsh_plugins starship
 
 clean: distclean buildclean
 
@@ -26,23 +27,26 @@ install: all
 	ln -snf $(MAKEDIR)/build/rc $${HOME}/$(rc)
 	ln -snf $(MAKEDIR)/build/profile $${HOME}/$(profile)
 	ln -snf $(MAKEDIR)/build/starship.toml $${HOME}/.config/starship.toml
+ifeq ($(SHELLBIN), zsh)
+	ln -snf $(MAKEDIR)/submodules/zsh_plugins $${HOME}/.zsh/plugins
+endif
 
 distclean:
 	rm ~/.vimrc ~/.vimrc_dein ~/.tmux.conf ~/.tmux ~/$(rc) ~/$(profile)
-	for plugin in $(zsh_plugins); do\
-		rm -rf ~/.zsh/plugins/$$plugin;\
-	done
+	rm ~/.zsh/plugins
 
 buildclean:
 	rm -rf build/*
+	rm -rf git/*
 
-shell_plugins: 
+zsh_plugins: dirs
 ifeq ($(SHELLBIN), zsh)
-	mkdir -p ~/.zsh/plugins
 	for plugin in $(zsh_plugins); do\
-		git clone --depth=1 https://github.com/zsh-users/$$plugin.git ~/.zsh/plugins/$$plugin;\
+		cd $(MAKEDIR)/submodules/zsh_plugins/$$plugin;\
+		git pull;\
 	done
 endif
+
 
 build/profile: dirs
 ifeq ($(SHELLBIN), bash)
@@ -120,13 +124,16 @@ ifeq ($(shell which tmux 2>/dev/null | grep /.*tmux | wc -l), 0)
 endif
 
 starship: dirs
+	[[ -z $(which starship) ]] &&\
 	cd $(MAKEDIR)/build &&\
 	curl https://starship.rs/install.sh -o starship-install.sh &&\
 	chmod +x starship-install.sh &&\
 	./starship-install.sh -b $${HOME}/.local/bin -y
+
 	cp $(MAKEDIR)/src/starship.toml $(MAKEDIR)/build/starship.toml
 
 dirs:
 	mkdir -p build
+	mkdir -p git
 	mkdir -p $${HOME}/.local/bin
 	mkdir -p $${HOME}/.config
