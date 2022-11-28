@@ -27,5 +27,15 @@ function add_sshkeys() {
 }
 
 function clear_authsock_deadlinks() {
-  find $HOME/.ssh/ -xtype l | xargs -r rm
+  uname_=$(uname -s)
+  sig=${uname_:0:5}
+  if [ ${sig} == "Linux" ];then
+    deadlinks=$(find $HOME/.ssh/ -xtype l)
+  elif [ ${sig} == "Darwi" ];then
+    deadlinks=$(find -L $HOME/.ssh/ -type l)
+  fi
+
+  if [[ ! -z "${deadlinks}" ]];then
+    rm -r $deadlinks
+  fi
 }
