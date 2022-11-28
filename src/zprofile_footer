@@ -1,5 +1,5 @@
-[ -f $HOME/.profile ] && source $HOME/.profile
 export ZPROFILE="$HOME/.zprofile"
+[ -f $HOME/.profile ] && source $HOME/.profile
 echo "[INFO] set ZPROFILE=$HOME/.zprofile" >&2
 if [[ -f $HOME/.zshrc  && "${ZSHRC-undefined}" == "undefined" ]];then
   source $HOME/.zshrc
