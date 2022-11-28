@@ -12,6 +12,9 @@ $all$character"""
 
 add_newline = true
 
+[hostname]
+format = "[$ssh_symbol$hostname]($style) "
+
 [directory]
 format = " $path "
 style = "bg:#0F007F fg:white"
