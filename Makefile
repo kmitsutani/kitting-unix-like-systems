@@ -41,10 +41,7 @@ buildclean:
 
 zsh_plugins: dirs
 ifeq ($(SHELLBIN), zsh)
-	for plugin in $(zsh_plugins); do\
-		cd $(MAKEDIR)/submodules/zsh_plugins/$$plugin;\
-		git pull;\
-	done
+	git submodule update --recursive
 endif
 
 
