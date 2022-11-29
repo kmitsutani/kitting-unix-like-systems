@@ -4,3 +4,4 @@ echo "[INFO] set ZPROFILE=$HOME/.zprofile" >&2
 #if [[ -f $HOME/.zshrc  && "${ZSHRC-undefined}" == "undefined" ]];then
 #  source $HOME/.zshrc
 #fi
+source $HOME/.zshrc
