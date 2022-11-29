@@ -30,12 +30,12 @@ function clear_authsock_deadlinks() {
   uname_=$(uname -s)
   sig=${uname_:0:5}
   if [ ${sig} == "Linux" ];then
-    deadlinks=$(find $HOME/.ssh/ -xtype l)
+    deadlinks="$(find $HOME/.ssh/ -maxdepth 1 -xtype l)"
   elif [ ${sig} == "Darwi" ];then
-    deadlinks=$(find -L $HOME/.ssh/ -type l)
+    deadlinks="$(find -L $HOME/.ssh/ -maxdepth 1 -type l)"
   fi
 
-  if [[ ! -z "${deadlinks}" ]];then
+  if [ -n "${deadlinks}" ];then
     rm -r $deadlinks
   fi
 }
