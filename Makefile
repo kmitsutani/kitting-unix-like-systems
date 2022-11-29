@@ -96,26 +96,26 @@ libevent_version := 2.1.12
 tmux_version := 3.3a
 requirements: dirs
 ifeq ($(shell which tmux 2>/dev/null | grep /.*tmux | wc -l), 0)
-	mkdir -p $${HOME}/local/lib/pkgconfig
+	mkdir -p $${HOME}/.local/lib/pkgconfig
 
 	git clone --depth=1 https://github.com/ThomasDickey/ncurses-snapshots.git $(MAKEDIR)/build/nurses
 	cd $(MAKEDIR)/build/nurses
-	./configure --prefix=~/local --with-shared --with-termlib --enable-pc-files \
-		          --with-pkg-config-libdir=$${HOME}/local/lib/pkgconfig
+	./configure --prefix=$${HOME}/.local --with-shared --with-termlib --enable-pc-files \
+		          --with-pkg-config-libdir=$${HOME}/.local/lib/pkgconfig
 	make && make install
 
 	cd $(MAKEDIR)/build
 	wget https://github.com/libevent/libevent/releases/download/release-$(libevent_version)-stable/libevent-$(libevent_version)-stable.tar.gz
 	tar xzf libevent-$(libevent_version)-stable.tar.gz
 	cd libevent-$(libevent_version)/
-	./configure --prefix=$${HOME}/local --enable-shared
+	./configure --prefix=$${HOME}/.local --enable-shared
 	make && make install
 
 	cd $(MAKEDIR)/build
 	wget https://github.com/tmux/tmux/releases/download/3.3a/tmux-$(tmux_version).tar.gz
 	tar xzf tmux-$(tmux_version).tar.gz
 	cd tmux-$(tmux_version)
-	PKG_CONFIG_PATH=$${HOME}/local/lib/pkgconfig ./configure --prefix=$${HOME}/local
+	PKG_CONFIG_PATH=$${HOME}/.local/lib/pkgconfig ./configure --prefix=$${HOME}/.local
 	make && make install
 endif
 
@@ -130,6 +130,5 @@ endif
 
 dirs:
 	mkdir -p build
-	mkdir -p git
 	mkdir -p $${HOME}/.local/bin
 	mkdir -p $${HOME}/.config
