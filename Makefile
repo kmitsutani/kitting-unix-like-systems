@@ -32,12 +32,11 @@ ifeq ($(SHELLBIN), zsh)
 endif
 
 distclean:
-	rm ~/.vimrc ~/.vimrc_dein ~/.tmux.conf ~/.tmux ~/$(rc) ~/$(profile)
-	rm ~/.zsh/plugins
+	rm -r ~/.vimrc ~/.vimrc_dein ~/.tmux.conf ~/.tmux ~/$(rc) ~/$(profile)
+	rm -r ~/.zsh/plugins
 
 buildclean:
 	rm -rf build/*
-	rm -rf git/*
 
 zsh_plugins: dirs
 ifeq ($(SHELLBIN), zsh)
