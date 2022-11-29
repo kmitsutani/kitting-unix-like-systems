@@ -1,3 +1,3 @@
 eval "$(starship init zsh)"
-export ZSHRC="$HOME/.zshrc"
-echo "[INFO] set ZSHRC=$HOME/.zshrc"
+#export ZSHRC="$HOME/.zshrc"
+#echo "[INFO] set ZSHRC=$HOME/.zshrc"
