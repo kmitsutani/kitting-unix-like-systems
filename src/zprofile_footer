@@ -1,6 +1,1 @@
-#export ZPROFILE$TMUX="$HOME/.zprofile"
-#echo "[INFO] set ZPROFILE$TMUX=$HOME/.zprofile" >&2
 [ -f $HOME/.profile ] && source $HOME/.profile
-#if [[ -f $HOME/.zshrc  && "${ZSHRC$TMUX-undefined}" == "undefined" ]];then
-#  source $HOME/.zshrc
-#fi
