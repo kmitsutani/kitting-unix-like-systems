@@ -18,6 +18,8 @@ all: tmux vim build/profile build/rc zsh_plugins starship
 
 clean: distclean buildclean
 
+reinstall: clean install
+
 install: all
 	ln -snf $(MAKEDIR)/build/vimrc $${HOME}/.vimrc
 	ln -snf $(MAKEDIR)/build/vimrc_dein $${HOME}/.vimrc_dein

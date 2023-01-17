@@ -9,20 +9,14 @@ function _info() {
 # _info ".ssh_common is loaded" "DEBUG"
 
 function echo_keyhash() {
-  $1=ssh_key
-  keyhash = $(ssh-keygen -E ${__fp_fmt__} -l -f $1)
+  ssh_key=$1
+  keyhash=$(ssh-keygen -E ${__fp_fmt__} -l -f $ssh_key | awk -F' ' '{print $2}')
 }
 
 function add_sshkeys() {
-  keys=$(grep -s "OPENSSH PRIVATE KEY" $HOME/.ssh/* | sed -e 's/^\(.*\):.*$/\1/g' | uniq)  
+  keys=($(grep -s "BEGIN OPENSSH PRIVATE KEY" $HOME/.ssh/* | sed -e 's/^\(.*\):.*$/\1/g'))
   for key in ${keys[@]}; do
-    key_fp=$(ssh-keygen -l -E $__fp_fmt__ -f ${key} | awk -F' ' '{print $2}')
-    if [ $(ssh-add -E ${__fp_fmt__} -l | grep  $key_fp | wc -l) \
-          -eq 0 \
-       ]; then
-      _info "add key: ${key}"
-      ssh-add $key
-    fi
+    ssh-add $key
   done
 }
 
