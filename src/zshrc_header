@@ -109,7 +109,7 @@ fi
 
 alias ls='ls -G'
 alias ssh="ssh -A"
-alias pip="python3 -m pip"
+alias pip="python -m pip"
 alias jnb="jupyter-notebook"
 
 PROMPT='%F{blue}%n@%l/%M%f:%~
