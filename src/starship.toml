@@ -24,6 +24,7 @@ format = "[ $symbol$branch ]($style)"
 style = "bg:#0A1E7F fg:white"
 
 [git_status]
+command_timeout = 500
 format = "[ $all_status$ahead_behind ]($style)"
 style = "bg:#05367F fg:white"
 
