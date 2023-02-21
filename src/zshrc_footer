@@ -1,3 +1,1 @@
-eval "$(starship init zsh)"
-export ZSHRC="$HOME/.zshrc"
-echo "[INFO] set ZSHRC=$HOME/.zshrc"
+[ -e $HOME/.rc.local ] && source $HOME/.rc.local

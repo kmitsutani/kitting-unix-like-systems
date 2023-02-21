@@ -12,11 +12,13 @@ _paths+=($HOME/miniconda3)
 _paths+=($HOME/snap/bin)
 _paths+=(/usr/local/opt/lsof/bin)
 _paths+=($HOME/tf_objdet/models/protobuf)
+_paths+=($HOME/anaconda3/bin)
 
 PATH=${_paths[1]}
 for _path in ${_paths[@]:1}; do
   [ -d $_path ] && PATH="$PATH:$_path"
 done
+unset _paths
 
 # The next line updates PATH for the Google Cloud SDK.
 [ -f "${HOME}/google-cloud-sdk/_path.bash.inc" ] && \
