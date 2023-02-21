@@ -28,11 +28,7 @@ export ZIPINFOOPT=-OCP932
 export UNZIPOPT=-OCP932
 
 #-- Like fish prompt --#
-if [[ -d /opt/homebrew/share ]];then
-  _plugins=/opt/homebrew/share
-else
-	_plugins=$HOME/.zsh/plugins
-fi
+_plugins=$HOME/.zsh/plugins
 source $_plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $_plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source $_plugins/zsh-history-substring-search/zsh-history-substring-search.zsh

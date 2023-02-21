@@ -134,3 +134,4 @@ dirs:
 	mkdir -p build
 	mkdir -p $${HOME}/.local/bin
 	mkdir -p $${HOME}/.config
+	mkdir -p $${HOME}/.zsh/
