@@ -56,7 +56,6 @@ nnoremap <silent><Esc><Esc> :<C-u>set nohlsearch!<CR>
 " Cursor
 set whichwrap=b,s,h,l,<,>,[,],~ " カーソルの左右移動で行末から次の行の行頭への移動が可能になる
 set number " 行番号を表示
-set cursorline " カーソルラインをハイライト"
 
 " completion
 set wildmenu " コマンドモードの補完
@@ -87,6 +86,7 @@ map <S-F7> <Nop>
 " noremap : ;
 " noremap ; :
 noremap <C-c> <Nop>
+nnoremap <ESC><ESC> :nohl<CR>
 imap <Nul> <Nop>
 inoremap ,d <C-r>=strftime('%Y-%m-%d')<Return>
 inoremap ,t <C-r>=strftime('%H:%M:%S')<Return>
