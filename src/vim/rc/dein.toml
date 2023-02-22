@@ -21,8 +21,8 @@ repo = 'scrooloose/syntastic'
 hook_add = '''
   let g:syntastic_check_on_open = 1
   let g:syntastic_check_on_wq = 0
-  highlight SyntasticErrorLine ctermfg=red ctermbg=none
-  highlight SyntasticWarningLine ctermfg=red ctermbg=none
+  highlight SyntasticErrorLine cterm=bold,underline ctermfg=black ctermbg=darkred
+  highlight SyntasticWarningLine cterm=bold,underline ctermfg=black ctermbg=darkred
   let g:syntastic_python_checkers = ['pyflakes', 'pep8']
   let g:syntastic_python_pep8_args = '--ignore=E126,E203'
   let g:syntastic_python_flake8_args = '--ignore=E126,E203'

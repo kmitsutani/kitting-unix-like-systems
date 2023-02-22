@@ -18,6 +18,20 @@ set fileencoding=utf-8
 set ttimeoutlen=10
 set ambiwidth=double
 
+" https://github.com/davidhalter/jedi-vim/issues/233
+" encoding settings {{{
+if has("multi_byte")
+  if &termencoding == ""
+    let &termencoding = &encoding
+  endif
+  set encoding=utf-8
+  setglobal fileencoding=utf-8
+  "setglobal bomb
+  set fileencodings=ucs-bom,utf-8,latin1
+endif
+" }}}
+
+
 " backspace
 set backspace=indent,eol,start
 
