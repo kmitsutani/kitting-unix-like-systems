@@ -1,7 +1,7 @@
 #:=zshrc_header
 if [[ $- != *i* ]]; then return; fi
 if [[ "${ZSHRC-undefined}" != "undefined" ]]; then return; fi
-if [[ -f $HOME/.zprofile && "${ZPROFILE-undefined}" == "undefined" ]]; then
+if [[ -f $HOME/.zprofile && "${ZPROFILE-undefined}" = "undefined" ]]; then
   source $HOME/.zprofile
 fi
 setopt IGNOREEOF
