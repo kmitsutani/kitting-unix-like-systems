@@ -2,6 +2,7 @@ zsh_plugins := zsh-completions zsh-autosuggestions zsh-syntax-highlighting zsh-h
 
 .PHONY: requirements tmux vim all install buildclean distclean allclean starship
 .DEFAULT_GOAL := all
+SHELL=/bin/bash
 
 MAKEDIR:=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 SHELLBIN:=$(notdir $(shell echo $$SHELL))
@@ -13,9 +14,11 @@ else ifeq ($(SHELLBIN), zsh)
 	profile := .zprofile
 endif
 
-all: tmux vim build/profile build/rc shell_plugins starship
+all: tmux vim build/profile build/rc zsh_plugins starship
 
 clean: distclean buildclean
+
+reinstall: clean install
 
 install: all
 	ln -snf $(MAKEDIR)/build/vimrc $${HOME}/.vimrc
@@ -26,29 +29,26 @@ install: all
 	ln -snf $(MAKEDIR)/build/rc $${HOME}/$(rc)
 	ln -snf $(MAKEDIR)/build/profile $${HOME}/$(profile)
 	ln -snf $(MAKEDIR)/build/starship.toml $${HOME}/.config/starship.toml
+ifeq ($(SHELLBIN), zsh)
+	ln -snf $(MAKEDIR)/submodules/zsh_plugins $${HOME}/.zsh/plugins
+endif
 
 distclean:
-	rm ~/.vimrc ~/.vimrc_dein ~/.tmux.conf ~/.tmux ~/$(rc) ~/$(profile)
-	for plugin in $(zsh_plugins); do\
-		rm -rf ~/.zsh/plugins/$$plugin;\
-	done
+	rm -r ~/.vimrc ~/.vimrc_dein ~/.tmux.conf ~/.tmux ~/$(rc) ~/$(profile)
+	rm -r ~/.zsh/plugins
 
 buildclean:
 	rm -rf build/*
 
-shell_plugins: 
+zsh_plugins: dirs
 ifeq ($(SHELLBIN), zsh)
-	mkdir -p ~/.zsh/plugins
-	for plugin in $(zsh_plugins); do\
-		git clone --depth=1 https://github.com/zsh-users/$$plugin.git ~/.zsh/plugins/$$plugin;\
-	done
+	git submodule update --recursive
 endif
+
 
 build/profile: dirs
 ifeq ($(SHELLBIN), bash)
 	cat src/bash_profile_header >> $@
-	cat src/export_envs >> $@
-	cat src/export_path >> $@
 ifeq ($(shell uname), Darwin)
 	/opt/homebrew/bin/brew shellenv >> $@
 endif
@@ -57,8 +57,6 @@ endif
 	cat src/bash_profile_footer >> $@
 else ifeq ($(SHELLBIN), zsh)
 	cat src/zprofile_header >> $@
-	cat src/export_envs >> $@
-	cat src/export_path >> $@
 ifeq ($(shell uname), Darwin)
 	/opt/homebrew/bin/brew shellenv >> $@
 endif
@@ -71,11 +69,15 @@ endif
 build/rc: dirs
 ifeq ($(SHELLBIN), bash)
 	cat src/bashrc_header >> $@
+	cat src/export_envs >> $@
+	cat src/export_path >> $@
 	cat src/ssh_common >> $@
 	cat src/sshrc >> $@
 	cat src/bashrc_footer >> $@
 else ifeq ($(SHELLBIN), zsh)
 	cat src/zshrc_header >> $@
+	cat src/export_envs >> $@
+	cat src/export_path >> $@
 	cat src/ssh_common >> $@
 	cat src/sshrc >> $@
 	cat src/zshrc_footer >> $@
@@ -96,37 +98,40 @@ libevent_version := 2.1.12
 tmux_version := 3.3a
 requirements: dirs
 ifeq ($(shell which tmux 2>/dev/null | grep /.*tmux | wc -l), 0)
-	mkdir -p $${HOME}/local/lib/pkgconfig
+	mkdir -p $${HOME}/.local/lib/pkgconfig
 
 	git clone --depth=1 https://github.com/ThomasDickey/ncurses-snapshots.git $(MAKEDIR)/build/nurses
 	cd $(MAKEDIR)/build/nurses
-	./configure --prefix=~/local --with-shared --with-termlib --enable-pc-files \
-		          --with-pkg-config-libdir=$${HOME}/local/lib/pkgconfig
+	./configure --prefix=$${HOME}/.local --with-shared --with-termlib --enable-pc-files \
+		          --with-pkg-config-libdir=$${HOME}/.local/lib/pkgconfig
 	make && make install
 
 	cd $(MAKEDIR)/build
 	wget https://github.com/libevent/libevent/releases/download/release-$(libevent_version)-stable/libevent-$(libevent_version)-stable.tar.gz
 	tar xzf libevent-$(libevent_version)-stable.tar.gz
 	cd libevent-$(libevent_version)/
-	./configure --prefix=$${HOME}/local --enable-shared
+	./configure --prefix=$${HOME}/.local --enable-shared
 	make && make install
 
 	cd $(MAKEDIR)/build
 	wget https://github.com/tmux/tmux/releases/download/3.3a/tmux-$(tmux_version).tar.gz
 	tar xzf tmux-$(tmux_version).tar.gz
 	cd tmux-$(tmux_version)
-	PKG_CONFIG_PATH=$${HOME}/local/lib/pkgconfig ./configure --prefix=$${HOME}/local
+	PKG_CONFIG_PATH=$${HOME}/.local/lib/pkgconfig ./configure --prefix=$${HOME}/.local
 	make && make install
 endif
 
 starship: dirs
-	cd $(MAKEDIR)/build &&\
-	curl https://starship.rs/install.sh -o starship-install.sh &&\
-	chmod +x starship-install.sh &&\
-	./starship-install.sh -b $${HOME}/.local/bin -y
+ifeq ($(shell which starship), "")
+	cd $(MAKEDIR)/build;
+	curl https://starship.rs/install.sh -o starship-install.sh;
+	chmod +x starship-install.sh;
+	./starship-install.sh -b $${HOME}/.local/bin -y;
+endif
 	cp $(MAKEDIR)/src/starship.toml $(MAKEDIR)/build/starship.toml
 
 dirs:
 	mkdir -p build
 	mkdir -p $${HOME}/.local/bin
 	mkdir -p $${HOME}/.config
+	mkdir -p $${HOME}/.zsh/

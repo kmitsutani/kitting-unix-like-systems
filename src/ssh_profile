@@ -31,6 +31,5 @@ fi
 
 
 clear_authsock_deadlinks
-add_sshkeys
 
 unset __ssh_agent_init__
