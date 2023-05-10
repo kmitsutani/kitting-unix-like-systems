@@ -52,16 +52,12 @@ ifeq ($(SHELLBIN), bash)
 ifeq ($(shell uname), Darwin)
 	/opt/homebrew/bin/brew shellenv >> $@
 endif
-	cat src/ssh_common >> $@
-	cat src/ssh_profile >> $@
 	cat src/bash_profile_footer >> $@
 else ifeq ($(SHELLBIN), zsh)
 	cat src/zprofile_header >> $@
 ifeq ($(shell uname), Darwin)
 	/opt/homebrew/bin/brew shellenv >> $@
 endif
-	cat src/ssh_common >> $@
-	cat src/ssh_profile >> $@
 	cat src/zprofile_footer >>  $@
 endif
 
@@ -71,15 +67,11 @@ ifeq ($(SHELLBIN), bash)
 	cat src/bashrc_header >> $@
 	cat src/export_envs >> $@
 	cat src/export_path >> $@
-	cat src/ssh_common >> $@
-	cat src/sshrc >> $@
 	cat src/bashrc_footer >> $@
 else ifeq ($(SHELLBIN), zsh)
 	cat src/zshrc_header >> $@
 	cat src/export_envs >> $@
 	cat src/export_path >> $@
-	cat src/ssh_common >> $@
-	cat src/sshrc >> $@
 	cat src/zshrc_footer >> $@
 endif
 
