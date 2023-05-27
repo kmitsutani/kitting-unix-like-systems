@@ -34,8 +34,8 @@ ifeq ($(SHELLBIN), zsh)
 endif
 
 distclean:
-	rm -r ~/.vimrc ~/.vimrc_dein ~/.tmux.conf ~/.tmux ~/$(rc) ~/$(profile)
-	rm -r ~/.zsh/plugins
+	rm -rf ~/.vimrc ~/.vimrc_dein ~/.tmux.conf ~/.tmux ~/$(rc) ~/$(profile)
+	rm -rf ~/.zsh/plugins
 
 buildclean:
 	rm -rf build/*
@@ -93,19 +93,19 @@ ifeq ($(shell which tmux 2>/dev/null | grep /.*tmux | wc -l), 0)
 	mkdir -p $${HOME}/.local/lib/pkgconfig
 
 	git clone --depth=1 https://github.com/ThomasDickey/ncurses-snapshots.git $(MAKEDIR)/build/nurses
-	cd $(MAKEDIR)/build/nurses
+	cd $(MAKEDIR)/build/nurses && \
 	./configure --prefix=$${HOME}/.local --with-shared --with-termlib --enable-pc-files \
 		          --with-pkg-config-libdir=$${HOME}/.local/lib/pkgconfig
 	make && make install
 
-	cd $(MAKEDIR)/build
+	cd $(MAKEDIR)/build && \
 	wget https://github.com/libevent/libevent/releases/download/release-$(libevent_version)-stable/libevent-$(libevent_version)-stable.tar.gz
 	tar xzf libevent-$(libevent_version)-stable.tar.gz
 	cd libevent-$(libevent_version)/
 	./configure --prefix=$${HOME}/.local --enable-shared
 	make && make install
 
-	cd $(MAKEDIR)/build
+	cd $(MAKEDIR)/build && \
 	wget https://github.com/tmux/tmux/releases/download/3.3a/tmux-$(tmux_version).tar.gz
 	tar xzf tmux-$(tmux_version).tar.gz
 	cd tmux-$(tmux_version)
