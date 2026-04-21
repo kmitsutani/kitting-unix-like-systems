@@ -48,12 +48,14 @@ endif
 
 build/profile: dirs
 ifeq ($(SHELLBIN), bash)
+	rm -f $@
 	cat src/bash_profile_header >> $@
 ifeq ($(shell uname), Darwin)
 	/opt/homebrew/bin/brew shellenv >> $@
 endif
 	cat src/bash_profile_footer >> $@
 else ifeq ($(SHELLBIN), zsh)
+	rm -f $@
 	cat src/zprofile_header >> $@
 ifeq ($(shell uname), Darwin)
 	/opt/homebrew/bin/brew shellenv >> $@
@@ -64,11 +66,13 @@ endif
 
 build/rc: dirs
 ifeq ($(SHELLBIN), bash)
+	rm -f $@
 	cat src/bashrc_header >> $@
 	cat src/export_envs >> $@
 	cat src/export_path >> $@
 	cat src/bashrc_footer >> $@
 else ifeq ($(SHELLBIN), zsh)
+	rm -f $@
 	cat src/zshrc_header >> $@
 	cat src/export_envs >> $@
 	cat src/export_path >> $@

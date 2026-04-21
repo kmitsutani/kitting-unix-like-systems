@@ -1,5 +1,6 @@
 if [[ $- != *i* ]]; then return; fi
 export XDG_CONFIG_HOME=$HOME/.config
+[ "${BASHRC-undefined}" == "undefined" ] && export BASHRC="$HOME/.bashrc"
 [ "${BASH_PROFILE-undefined}" == "undefined" ] && source $HOME/.bash_profile
 
 # aliases

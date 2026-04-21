@@ -4,6 +4,7 @@ PATH=""
 
 _paths+=($HOME/bin)
 _paths+=($HOME/.local/bin)
+_paths+=($HOME/.cargo/bin)
 _paths+=(/usr/local/bin)
 _paths+=(/usr/local/sbin)
 _paths+=(/usr/local/SPTK/bin)

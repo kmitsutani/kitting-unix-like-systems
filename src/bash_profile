@@ -1,4 +1,5 @@
 if [[ $- != *i* ]]; then return; fi
+export BASH_PROFILE="$HOME/.bash_profile"
 
 # check dotfiles repository
 src_dir=$(dirname $(readlink -f $HOME/.bash_profile))
@@ -17,4 +18,3 @@ source $HOME/.ssh_profile
 if [ -f $HOME/.bashrc ] && [ "${BASHRC-undefined}" == "undefined" ]; then
   source $HOME/.bashrc
 fi
-export BASH_PROFILE="$HOME/.bash_profile"
